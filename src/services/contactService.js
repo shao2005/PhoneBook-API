@@ -1,16 +1,24 @@
 const Contact = require('../models/contact');
-const { Op } = require("sequelize");
+const { Op, fn, col } = require("sequelize");
 
 // Get contacts with pagination
-exports.getContacts = async (page, limit) => {
+exports.getContacts = async (page, limit, order) => {
     const offset = (page - 1) * limit;
+    const intOrder = ['id', 'createdAt', 'updatedAt'];
+    const orderForQuery = intOrder.includes(order) ? order : fn('lower', col(order));
     return await Contact.findAndCountAll({
         limit,
         offset,
+        order: [
+            [
+                orderForQuery, 
+                'ASC'
+            ]
+          ],
     });
 };
 
-// Search contacts by name (first or last name)
+// Search contacts by name (first or last or full name)
 exports.searchContacts = async (name) => {
     let contact;
     const splitName = name.split(" ");

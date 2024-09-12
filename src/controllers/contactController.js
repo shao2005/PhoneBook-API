@@ -3,8 +3,8 @@ const contactService = require('../services/contactService');
 // Get contacts with pagination (max 10 per page)
 exports.getContacts = async (req, res) => {
     try {
-        const { page = 1, limit = 10 } = req.query;
-        const contacts = await contactService.getContacts(page, limit);
+        const { page = 1, limit = 10, order = "id" } = req.query;
+        const contacts = await contactService.getContacts(page, limit, order);
         res.json(contacts);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching contacts', error: error.message });
