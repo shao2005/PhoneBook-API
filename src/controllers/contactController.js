@@ -36,7 +36,7 @@ exports.addContact = async (req, res) => {
 // Update a contact
 exports.updateContact = async (req, res) => {
     try {
-        const contact = await contactService.updateContact(req.params.id, req.body);
+        const contact = await contactService.updateContact(req.query.id, req.body);
         res.json(contact);
     } catch (error) {
         res.status(500).json({ message: 'Error updating contact', error: error.message });
@@ -46,7 +46,7 @@ exports.updateContact = async (req, res) => {
 // Delete a contact
 exports.deleteContact = async (req, res) => {
     try {
-        await contactService.deleteContact(req.params.id);
+        await contactService.deleteContact(req.query.id);
         // status code 204: the request has been successfully completed, but no response payload body will be present
         res.status(204).send();
     } catch (error) {
