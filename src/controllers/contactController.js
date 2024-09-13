@@ -1,11 +1,14 @@
 const contactService = require('../services/contactService');
+const logger = require('../utils/logger');
 
 exports.getContacts = async (req, res) => {
     try {
+        logger.info('Getting all contacts');
         const { page = 1, limit = 10, order = "id" } = req.query;
         const contacts = await contactService.getContacts(page, limit, order);
         res.json(contacts);
     } catch (error) {
+        logger.error(`Failed getting all contacts: ${error.message}`);
         res.status(500).json({ message: 'Error fetching contacts', error: error.message });
     }
 };
@@ -13,42 +16,57 @@ exports.getContacts = async (req, res) => {
 exports.searchContacts = async (req, res) => {
     try {
         const { name } = req.query;
+        logger.info(`Searching for contacts with name: ${name}`);
         const contacts = await contactService.searchContacts(name);
+        logger.info(`${contacts.length} contact${contacts.length > 1 ? 's' : ''} found`);
         res.json(contacts);
     } catch (error) {
+        logger.error(`Failed searching: ${error.message}`);
         res.status(500).json({ message: 'Error searching contacts', error: error.message });
     }
 };
 
 exports.addContact = async (req, res) => {
     try {
+        logger.info('Adding a new contact');
         const error = validateContact(req.body);
         if (error) {
+            logger.error(`Validation error: ${error}`);
             return res.status(400).json({ error });
         }
         const contact = await contactService.addContact(req.body);
+        logger.info(`Contact created: ${contact.firstName} ${contact.lastName}`);
         // status code 201: the request was successfully fulfilled and resulted in one or possibly multiple new resources being created
         res.status(201).json(contact);
     } catch (error) {
+        logger.error(`Failed to add contact: ${error.message}`);
         res.status(500).json({ message: 'Error adding contact', error: error.message });
     }
 };
 
 exports.updateContact = async (req, res) => {
     try {
-        const contact = await contactService.updateContact(req.query.id, req.body);
+        const contactId = req.query.id;
+        logger.info(`Updating contact with ID: ${contactId}`);
+        const contact = await contactService.updateContact(contactId, req.body);
+        logger.info(`Contact updated: ${contact.firstName} ${contact.lastName}`);
         res.json(contact);
     } catch (error) {
+        logger.error(`Failed to update contact: ${error.message}`);
         res.status(500).json({ message: 'Error updating contact', error: error.message });
     }
 };
 
 exports.deleteContact = async (req, res) => {
     try {
-        await contactService.deleteContact(req.query.id);
+        const contactId = req.query.id;
+        logger.info(`Deleting contact with ID: ${contactId}`);
+        await contactService.deleteContact(contactId);
+        logger.info(`Contact with ID ${contactId} deleted`);
         // status code 204: the request has been successfully completed, but no response payload body will be present
         res.status(204).send();
     } catch (error) {
+        logger.error(`Failed to delete contact: ${error.message}`);
         res.status(500).json({ message: 'Error deleting contact', error: error.message });
     }
 };
