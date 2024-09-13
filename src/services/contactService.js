@@ -52,9 +52,6 @@ exports.searchContacts = async (name) => {
 
 // Add a new contact
 exports.addContact = async (data) => {
-    if (!(data.firstName && data.lastName && data.phone)){
-        throw new Error("You must provide at least a first name, last name and a phone number.");
-    }
     return await Contact.create(data);
 };
 

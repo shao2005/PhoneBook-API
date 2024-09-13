@@ -1,7 +1,6 @@
 const { DataTypes } = require('sequelize');
 const db = require('../config/db');
 
-// Define Contact model
 const Contact = db.define('Contact', {
   firstName: {
     type: DataTypes.STRING,
