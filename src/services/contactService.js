@@ -20,11 +20,14 @@ exports.getContacts = async (page, limit, order) => {
 
 // Search contacts by name (first or last or full name)
 exports.searchContacts = async (name) => {
+    if(!name){
+        return await Contact.findAll();
+    }
     let contact;
+    let where = {};
     const splitName = name.split(" ");
     if (splitName.length > 1){
-        contact =  await Contact.findAll({
-            where: {
+            where = {
                 [Op.or]: [
                     {[Op.and] : [
                         { firstName: { [Op.iLike]: `%${splitName[0]}%` } },
@@ -36,17 +39,15 @@ exports.searchContacts = async (name) => {
                     ]}
                 ]
             }
-        });
     } else {
-        contact =  await Contact.findAll({
-            where: {
+            where = {
                 [Op.or]: [
                     { firstName: { [Op.iLike]: `%${name}%` } },
                     { lastName: { [Op.iLike]: `%${name}%` } }
                 ]
             }
-        });
     }
+    contact =  await Contact.findAll({where})
     return contact;
 };
 
