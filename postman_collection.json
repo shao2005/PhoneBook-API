@@ -1,0 +1,196 @@
+{
+	"info": {
+		"_postman_id": "f5f0a0a2-bafc-482a-91b0-12332e1eac9c",
+		"name": "Rise phone book",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38282471"
+	},
+	"item": [
+		{
+			"name": "Get all contacts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:{{port}}/contacts?limit=15&page=1&order=lastName",
+					"host": [
+						"localhost"
+					],
+					"port": "{{port}}",
+					"path": [
+						"contacts"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "15",
+							"description": "default 10"
+						},
+						{
+							"key": "page",
+							"value": "1",
+							"description": "default 1"
+						},
+						{
+							"key": "order",
+							"value": "lastName",
+							"description": "id/firstName/lastName/address/phone/createdAt/updatedAt"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get contact by name",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:{{port}}/contacts/search?name=avi",
+					"host": [
+						"localhost"
+					],
+					"port": "{{port}}",
+					"path": [
+						"contacts",
+						"search"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "avi",
+							"description": "firstName lastName OR lastName firstName"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add contact",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstName\": \"Avi\",\n    \"lastName\": \"Levi\",\n    \"phone\": \"596518\",\n    \"address\": \"Haifa\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:{{port}}/contacts/add",
+					"host": [
+						"localhost"
+					],
+					"port": "{{port}}",
+					"path": [
+						"contacts",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit contact",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"lastName\": \"Moshe\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:{{port}}/contacts/update?id=2",
+					"host": [
+						"localhost"
+					],
+					"port": "{{port}}",
+					"path": [
+						"contacts",
+						"update"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete contact",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:{{port}}/contacts/delete?id=1",
+					"host": [
+						"localhost"
+					],
+					"port": "{{port}}",
+					"path": [
+						"contacts",
+						"delete"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "port",
+			"value": "8001",
+			"type": "string"
+		}
+	]
+}

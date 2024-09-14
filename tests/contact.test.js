@@ -1,7 +1,7 @@
 const request = require('supertest');
-const {app, server} = require('../index');
-const db = require('../config/db');
-const Contact = require('../models/contact');
+const {app, server} = require('../src/index');
+const db = require('../src/config/db');
+const Contact = require('../src/models/contact');
 
 describe('Contacts API', () => {
   // Before all tests, sync database

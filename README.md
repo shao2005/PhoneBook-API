@@ -138,6 +138,8 @@ localhost:8001/contacts/delete?id=1
 If it works, this endpoint returns `204` status code with no content.
 
 ---
+#### Please see the bottom section of this README file and find the "Postman Collection for API Requests" section. It will make it easier for you to test this API.
+---
 
 ## Running tests:
 To run the test suite use the following command:
@@ -146,5 +148,22 @@ npm run runtest
 ``` 
 This will create a separate docker compose to run the tests on, and will terminate when done.
 
+---
+
 ## Logging:
 The application uses Winston for logging. Logs are stored in the logs/app.log file in the container, and will also be displayed on the Console. The logs include timestamps, log levels (info, error, etc.), and actions taken.
+
+---
+## Postman Collection for API Requests
+
+To make API testing easier, I included a Postman collection in this repository.
+
+### Steps to Import the Collection:
+
+1. Download the `postman_collection.json` file from the repository.
+2. Open Postman.
+3. Click on **Import** in the upper left corner of Postman.
+4. Select the downloaded `postman_collection.json` file.
+5. The collection will be imported, and you can now run the requests.
+
+This will help you easily test the API endpoints provided in this project. 
