@@ -59,6 +59,7 @@ app  | Executing (default): SELECT i.relname AS name, ix.indisprimary AS primary
 Once the application is running you can access the API at:
 http://localhost:8001/contacts
 
+---
 
 ## API Endpoints:
 | Method        | Endpoint      | Description  |
@@ -94,7 +95,7 @@ localhost:8001/contacts/search?name=Levi Avi
 ```
 
 ### 3. Add contact:
-This is a POST request, in the body of the request you must provide firstName, lastName and phone. address is optional.
+This is a POST request, in the body of the request you must provide firstName, lastName and phone. Address is optional.
 
 The POST request:
 ```bash
@@ -126,7 +127,6 @@ with body:
 ```
 will update the name of the user with ID 1 to be Moshe Cohen.
 
-If it works, this endpoint returns `204` status code with no content.
 
 ### 5. Delete contact
 To delete a contact you need to send a DELETE request that specifies the user ID you want to delete.
@@ -135,6 +135,9 @@ For example:
 ```bash
 localhost:8001/contacts/delete?id=1
 ```
+If it works, this endpoint returns `204` status code with no content.
+
+---
 
 ## Running tests:
 To run the test suite use the following command:
@@ -144,4 +147,4 @@ npm run runtest
 This will create a separate docker compose to run the tests on, and will terminate when done.
 
 ## Logging:
-The application uses Winston for logging. Logs are stored in the logs/app.log file, and will be displayed on the Console. The logs include timestamps, log levels (info, error, etc.), and actions taken.
+The application uses Winston for logging. Logs are stored in the logs/app.log file in the container, and will also be displayed on the Console. The logs include timestamps, log levels (info, error, etc.), and actions taken.
