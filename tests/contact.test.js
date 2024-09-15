@@ -4,12 +4,12 @@ const db = require('../src/config/db');
 const Contact = require('../src/models/contact');
 
 describe('Contacts API', () => {
-  // Before all tests, sync database
+    // Before all tests, sync database
   beforeAll(async () => {
     await db.sync({ force: true });
   });
 
-  // Clean up after each test
+    // Clean up after each test
   afterEach(async () => {
     await Contact.destroy({ where: {} });
   });
@@ -38,7 +38,7 @@ describe('Contacts API', () => {
     expect(res.body.address).toBe('23 Jaffa St.');
   });
 
-    // Add a new contact with missing fields
+  // Add a new contact with missing fields
   it('should return validation error if required fields are missing', async () => {
     const incompleteContact = {
       firstName: 'Avi',
@@ -48,6 +48,43 @@ describe('Contacts API', () => {
 
     expect(res.statusCode).toBe(400); // Bad Request
     expect(res.body.error).toBe('Validation error: firstName, lastName, and phone are required');
+  });
+
+  // Add a new contact with whitespace in the firstName or lastName
+  it('should return validation error if firstName or lastName contains spaces', async () => {
+    const contactWithSpaces = {
+      firstName: 'Bat El',
+      lastName: ' Levi',
+      phone: '123456789',
+      address: '23 Jaffa St.',
+    };
+
+    const res = await request(app).post('/contacts/add').send(contactWithSpaces);
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body.error).toBe('Validation error: firstName and lastName cannot contain spaces. Use a hyphen (-) instead.');
+  });
+
+  // Add a new contact with an already existing phone number
+  it('should return a 409 conflict error if phone number already exists', async () => {
+    const existingContact = {
+      firstName: 'Avi',
+      lastName: 'Levi',
+      phone: '123456789'
+    };
+    
+    await Contact.create(existingContact);
+
+    const newContact = {
+      firstName: 'Shmuel',
+      lastName: 'Cohen',
+      phone: '123456789'  // Duplicate phone
+    };
+
+    const res = await request(app).post('/contacts/add').send(newContact);
+
+    expect(res.statusCode).toBe(409);
+    expect(res.body.error).toBe('Validation error');
   });
 
   // Get all contacts with pagination
@@ -78,10 +115,10 @@ describe('Contacts API', () => {
 
   // Search contact by name
   it('should search for contacts by first and/or last name', async () => {
-    // Add some dummy contacts
+        // Add some dummy contacts
     await Contact.bulkCreate([
-        { firstName: 'Avi', lastName: 'Levi', phone: '123456789', address: '123 Jaffa St' },
-        { firstName: 'Batia', lastName: 'Malka', phone: '987654321', address: '456 Eilat St' }
+      { firstName: 'Avi', lastName: 'Levi', phone: '123456789', address: '123 Jaffa St' },
+      { firstName: 'Batia', lastName: 'Malka', phone: '987654321', address: '456 Eilat St' }
     ]);
 
     const res = await request(app).get('/contacts/search?name=Avi');
@@ -92,18 +129,18 @@ describe('Contacts API', () => {
     expect(res.body[0].lastName).toBe('Levi');
   });
 
-   // Search for a non-existent contact
-   it('should return empty result when searching for non-existent contact', async () => {
+  // Search for a non-existent contact
+  it('should return a 404 when searching for non-existent contact', async () => {
     const res = await request(app).get('/contacts/search?name=NonExistingName');
 
-    expect(res.statusCode).toBe(200);
-    expect(res.body.length).toBe(0); 
+    expect(res.statusCode).toBe(404); 
+    expect(res.body.message).toBe('No contacts found');
   });
 
   // Update contact
   it('should update an existing contact', async () => {
-    // Add a contact to update
-    const contact = await Contact.create({ firstName: 'Avi', lastName: 'Levi', phone: '123456789', address: '123 Jaffa St' });
+        // Add a contact to update
+        const contact = await Contact.create({ firstName: 'Avi', lastName: 'Levi', phone: '123456789', address: '123 Jaffa St' });
 
     const res = await request(app).put(`/contacts/update?id=${contact.id}`).send({
       firstName: 'Shmuel',
@@ -118,21 +155,21 @@ describe('Contacts API', () => {
     expect(res.body.address).toBe('123 Jaffa St');
   });
 
-   // Update non-existent contact
-   it('should return error when updating a non-existent contact', async () => {
+  // Update non-existent contact
+  it('should return 404 when updating a non-existent contact', async () => {
     const res = await request(app).put('/contacts/update?id=999').send({
       firstName: 'Update',
       lastName: 'last',
       phone: '1230'
     });
 
-    expect(res.statusCode).toBe(500); 
+    expect(res.statusCode).toBe(404); 
     expect(res.body.error).toBe('Contact not found');
   });
 
   // Delete contact
   it('should delete a contact', async () => {
-    // Add a contact to delete
+        // Add a contact to delete
     const contact = await Contact.create({ firstName: 'Aaa', lastName: 'Bbb', phone: '12345' });
 
     const res = await request(app).delete(`/contacts/delete?id=${contact.id}`);
@@ -141,10 +178,10 @@ describe('Contacts API', () => {
   });
 
   // Delete non-existent contact
-  it('should return error when deleting a non-existent contact', async () => {
+  it('should return 404 when deleting a non-existent contact', async () => {
     const res = await request(app).delete('/contacts/delete?id=999');
 
-    expect(res.statusCode).toBe(500);
+    expect(res.statusCode).toBe(404);
     expect(res.body.error).toBe('Contact not found');
   });
 });
