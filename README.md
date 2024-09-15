@@ -143,7 +143,7 @@ If it works, this endpoint returns `204` status code with no content.
 ---
 
 ## Running tests:
-To run the test suite use the following command:
+To run the test suite, make sure you are in the project directory you just cloned (`cd Rise-PhoneBook`), open the terminal and use the following command:
 ```bash
 npm run runtest
 ``` 
