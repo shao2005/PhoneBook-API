@@ -24,6 +24,7 @@ A simple phonebook application that provides an API for managing contacts. The A
 
 To run this project, make sure you have the following installed:
 - [Git](https://git-scm.com/downloads)
+- [Node.js and npm](https://nodejs.org/en/download/prebuilt-installer)
 - [Docker](https://docs.docker.com/get-docker/) (for containerization)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
