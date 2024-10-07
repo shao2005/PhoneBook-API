@@ -71,7 +71,7 @@ exports.deleteContact = async (req, res) => {
         await contactService.deleteContact(contactId);
         logger.info(`Contact with ID ${contactId} deleted`);
         // status code 204: the request has been successfully completed, but no response payload body will be present
-        res.status(204).send();
+        res.status(200).json({id: contactId});
     } catch (error) {
         logger.error(`Failed to delete contact: ${error.message}`);
         const statusCode = errorStatusCode(error.message);

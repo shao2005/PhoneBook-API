@@ -174,7 +174,8 @@ describe('Contacts API', () => {
 
     const res = await request(app).delete(`/contacts/delete?id=${contact.id}`);
 
-    expect(res.statusCode).toBe(204);
+    expect(res.statusCode).toBe(200);
+    expect(res.body.id).toBe(`${contact.id}`);
   });
 
   // Delete non-existent contact

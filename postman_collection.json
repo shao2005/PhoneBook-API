@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "f5f0a0a2-bafc-482a-91b0-12332e1eac9c",
-		"name": "Rise phone book",
+		"name": "Phone book API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "38282471"
 	},

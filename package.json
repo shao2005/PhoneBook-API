@@ -1,5 +1,5 @@
 {
-  "name": "rise-phonebook",
+  "name": "phonebook_api",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
