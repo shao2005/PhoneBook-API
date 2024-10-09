@@ -54,6 +54,11 @@ exports.updateContact = async (req, res) => {
     try {
         const contactId = req.query.id;
         logger.info(`Attempting to update contact with ID: ${contactId}`);
+        const error = hasWhitespace(req.body);
+        if (error) {
+            logger.error(`Validation error: ${error}`);
+            return res.status(400).json({ error });
+        }
         const contact = await contactService.updateContact(contactId, req.body);
         logger.info(`Contact updated: ${contact.firstName} ${contact.lastName}, Phone: ${contact.phone}`);
         res.json(contact);
@@ -84,8 +89,13 @@ const validateContact = (contact) => {
     if (!firstName || !lastName || !phone) {
       return 'Validation error: firstName, lastName, and phone are required';
     }
-    const hasWhitespace = /\s/.test(firstName) || /\s/.test(lastName);
-    if (hasWhitespace) {
+    return hasWhitespace(contact);
+};
+
+const hasWhitespace = (contact) => {
+    const {firstName, lastName} = contact;
+    const hasSpaces = /\s/.test(firstName) || /\s/.test(lastName);
+    if (hasSpaces) {
         return 'Validation error: firstName and lastName cannot contain spaces. Use a hyphen (-) instead.';
     }
     return null;
