@@ -107,7 +107,7 @@ Example body:
 {
     "firstName": "Avi",
     "lastName": "Levi",
-    "phone": "+0545455455",
+    "phone": "+972545455455",
     "address": "Haifa"
 }
 ```
