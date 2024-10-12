@@ -25,7 +25,7 @@ describe('Contacts API', () => {
     const newContact = {
       firstName: 'Avi',
       lastName: 'Levi',
-      phone: '123456789',
+      phone: '+123456789',
       address: '23 Jaffa St.',
     };
 
@@ -34,7 +34,7 @@ describe('Contacts API', () => {
     expect(res.statusCode).toBe(201);
     expect(res.body.firstName).toBe('Avi');
     expect(res.body.lastName).toBe('Levi');
-    expect(res.body.phone).toBe('123456789');
+    expect(res.body.phone).toBe('+123456789');
     expect(res.body.address).toBe('23 Jaffa St.');
   });
 
@@ -63,6 +63,21 @@ describe('Contacts API', () => {
 
     expect(res.statusCode).toBe(400);
     expect(res.body.error).toBe('Validation error: firstName and lastName cannot contain spaces. Use a hyphen (-) instead.');
+  });
+
+  // Add a new contact with invalid phone number
+  it('should return validation error if phone number is invalid', async () => {
+    const contactWithSpaces = {
+      firstName: 'Avi',
+      lastName: 'Levi',
+      phone: '++5',
+      address: '23 Jaffa St.',
+    };
+  
+    const res = await request(app).post('/contacts/add').send(contactWithSpaces);
+  
+    expect(res.statusCode).toBe(400);
+    expect(res.body.error).toBe('Validation error: phone must be a valid phone number. It may start with +, followed by 1-15 digits.');
   });
 
   // Add a new contact with an already existing phone number

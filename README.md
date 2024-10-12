@@ -96,7 +96,7 @@ localhost:8001/contacts/search?name=Levi Avi
 ```
 
 ### 3. Add contact:
-This is a POST request, in the body of the request you must provide firstName, lastName and phone. Address is optional.
+This is a POST request, in the body of the request you must provide firstName, lastName and phone. First and last name can not contain white spaces. Phone may have + in the beginning, must have 1-15 digits. Address is optional.
 
 The POST request:
 ```bash
@@ -107,13 +107,13 @@ Example body:
 {
     "firstName": "Avi",
     "lastName": "Levi",
-    "phone": "054-5455455",
+    "phone": "+0545455455",
     "address": "Haifa"
 }
 ```
 
 ### 4. Edit contact:
-In this PUT request you must specify the User ID you want to edit in the query parameter called id, and the body of the request must specify the changes you wish to make in the contact.
+In this PUT request you must specify the User ID you want to edit in the query parameter called id, and the body of the request must specify the changes you wish to make in the contact. If editing phone number - it must be unique.
 
 For example, the PUT request:
 ```bash
@@ -136,7 +136,7 @@ For example:
 ```bash
 localhost:8001/contacts/delete?id=1
 ```
-If it works, this endpoint returns `204` status code with no content.
+If it works, this endpoint returns `204` status code and the id of the deleted contact.
 
 ---
 #### Please see the bottom section of this README file and find the "Postman Collection for API Requests" section. It will make it easier for you to test this API.

@@ -34,7 +34,7 @@ exports.searchContacts = async (req, res) => {
 exports.addContact = async (req, res) => {
     try {
         logger.info('Adding a new contact');
-        const error = validateContact(req.body);
+        const error = validateContact(req.body, true);
         if (error) {
             logger.error(`Validation error: ${error}`);
             return res.status(400).json({ error });
@@ -54,7 +54,7 @@ exports.updateContact = async (req, res) => {
     try {
         const contactId = req.query.id;
         logger.info(`Attempting to update contact with ID: ${contactId}`);
-        const error = hasWhitespace(req.body);
+        const error = validateContact(req.body, false);
         if (error) {
             logger.error(`Validation error: ${error}`);
             return res.status(400).json({ error });
@@ -63,9 +63,13 @@ exports.updateContact = async (req, res) => {
         logger.info(`Contact updated: ${contact.firstName} ${contact.lastName}, Phone: ${contact.phone}`);
         res.json(contact);
     } catch (error) {
-        logger.error(`Failed to update contact: ${error.message}`);
-        const statusCode = errorStatusCode(error.message);
-        res.status(statusCode).json({ message: 'Error updating contact', error: error.message });
+        let errMsg = error.message;
+        logger.error(`Failed to update contact: ${errMsg}`);
+        const statusCode = errorStatusCode(errMsg);
+        if(statusCode === 409){
+            errMsg = 'This phone number already exists, please provide a unique number.'
+        }
+        res.status(statusCode).json({ message: 'Error updating contact', error: errMsg });
     }
 };
 
@@ -84,13 +88,32 @@ exports.deleteContact = async (req, res) => {
     }
 };
 
-const validateContact = (contact) => {
+const validateContact = (contact, isCreateContact) => {
     const { firstName, lastName, phone } = contact;
-    if (!firstName || !lastName || !phone) {
-      return 'Validation error: firstName, lastName, and phone are required';
+    if(isCreateContact){
+        if (!firstName || !lastName || !phone) {
+            return 'Validation error: firstName, lastName, and phone are required';
+        }
     }
-    return hasWhitespace(contact);
+    if(phone){
+        const phoneInvalid = validatePhone(phone);
+        if(phoneInvalid){
+            return phoneInvalid;
+        }
+    }
+    if(firstName || lastName){
+        return hasWhitespace(contact);
+    }
+    return null;
 };
+
+const validatePhone = (phone) => {
+    const phoneRegex = /^[\+]?[0-9]{1,15}$/;
+    if (!phoneRegex.test(phone)) {
+        return 'Validation error: phone must be a valid phone number. It may start with +, followed by 1-15 digits.';
+    }
+    return null;
+}
 
 const hasWhitespace = (contact) => {
     const {firstName, lastName} = contact;
